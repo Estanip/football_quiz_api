@@ -10,5 +10,4 @@ module.exports = {
   testMatch: ['**/test/unit/**/*.spec.[jt]s?(x)'],
   collectCoverageFrom: ['**/src/modules/**/*.service.ts', '**/src/modules/**/*.controller.ts'],
   coverageDirectory: '<rootDir>/coverage/unit',
-  //setupFiles: ['<rootDir>/src/__test__/config/unit-test.config.ts'],
 };
