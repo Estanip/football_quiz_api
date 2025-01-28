@@ -40,3 +40,10 @@ lerna-debug.log*
 # Docker
 docker-compose.override.yml
 *.docker
+
+# Secrets
+secrets
+secrets/postgres_password.txt
+
+# Husky
+.husky/*
