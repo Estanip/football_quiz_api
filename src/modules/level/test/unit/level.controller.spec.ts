@@ -1,4 +1,6 @@
+import { APP_GUARD } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import { unitTestConfig } from 'src/__test__/config/unit.test-config';
 import { Level } from 'src/constants/level';
 import { LevelController } from 'src/modules/level/level.controller';
@@ -18,9 +20,16 @@ describe('LevelController', () => {
           provide: LevelService,
           useValue: unitTestConfig.levelServiceMock.useValue,
         },
+        {
+          provide: APP_GUARD,
+          useValue: { canActivate: jest.fn().mockReturnValue(true) },
+        },
         ResponseService,
       ],
-    }).compile();
+    })
+      .overrideGuard(ThrottlerGuard)
+      .useValue({ canActivate: jest.fn().mockReturnValue(true) })
+      .compile();
 
     levelController = module.get<LevelController>(LevelController);
     levelService = module.get<jest.Mocked<LevelService>>(LevelService);

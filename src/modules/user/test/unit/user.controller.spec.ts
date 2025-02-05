@@ -1,4 +1,7 @@
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { APP_GUARD } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import { unitTestConfig } from 'src/__test__/config/unit.test-config';
 import { Role } from 'src/constants/role';
 import { ResponseService } from 'src/modules/shared/services/success-response.service';
@@ -17,9 +20,20 @@ describe('UserController', () => {
           provide: UserService,
           useValue: unitTestConfig.userServiceMock.useValue,
         },
+        {
+          provide: APP_GUARD,
+          useValue: { canActivate: jest.fn().mockReturnValue(true) },
+        },
+        {
+          provide: CACHE_MANAGER,
+          useValue: unitTestConfig.cacheManagerMock.useValue,
+        },
         ResponseService,
       ],
-    }).compile();
+    })
+      .overrideGuard(ThrottlerGuard)
+      .useValue({ canActivate: jest.fn().mockReturnValue(true) })
+      .compile();
 
     userController = module.get<UserController>(UserController);
     userService = module.get<jest.Mocked<UserService>>(UserService);

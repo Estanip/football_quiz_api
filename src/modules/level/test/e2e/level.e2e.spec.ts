@@ -1,5 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import * as cookieParser from 'cookie-parser';
 import {
   clearDatabase,
@@ -13,7 +14,7 @@ import { runSeed } from 'src/database/seeds';
 import { CreateUserDto } from 'src/modules/user/dto/create-user.dto';
 import * as request from 'supertest';
 
-describe('LevelController (E2E)', () => {
+describe('Level (E2E)', () => {
   let app: INestApplication;
   let token: string;
   let adminCookies;
@@ -33,7 +34,10 @@ describe('LevelController (E2E)', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    })
+      .overrideGuard(ThrottlerGuard)
+      .useValue({ canActivate: jest.fn().mockReturnValue(true) }) // Mockeamos el guard
+      .compile();
 
     app = module.createNestApplication();
     app.use(cookieParser());
@@ -139,7 +143,13 @@ function _makeAuthenticatedRequest(
   cookie?: string[],
   body?: any,
 ) {
-  const req = request(app.getHttpServer())[method](endpoint).set('Cookie', cookie);
+  const req = request(app.getHttpServer())
+    [method](endpoint)
+    .set('Cookie', cookie)
+    .set(
+      'x-csrf-token',
+      'c00d2c77a0768297cb811e4b530f23d10fa9743a430da4089eae5f6464c6489c8832887dd45f971a0f6b38c0b65857b7da090c2fc00c006af69c537a012525f2',
+    );
   if (body) req.send(body);
   return req;
 }
