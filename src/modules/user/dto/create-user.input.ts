@@ -1,3 +1,4 @@
+import { Field, InputType } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
@@ -13,7 +14,9 @@ import {
 import { Role } from 'src/constants/role';
 import { REGEXP } from 'src/constants/validators';
 
-export class CreateUserDto {
+@InputType()
+export class CreateUserInput {
+  @Field()
   @ApiProperty({ description: 'User email', example: 'user@example.com' })
   @Matches(REGEXP.email, {
     message: 'Email must be a valid email address',
@@ -23,6 +26,7 @@ export class CreateUserDto {
   @Length(5, 30)
   email: string;
 
+  @Field()
   @ApiProperty({ description: 'User password', example: 'password123' })
   @Matches(REGEXP.password, {
     message:
@@ -33,16 +37,22 @@ export class CreateUserDto {
   @IsNotEmpty()
   password: string;
 
-  @ApiProperty({ description: 'User role', enum: Role, example: Role.Admin, default: Role.Player })
+  @Field(() => Role)
+  @ApiProperty({ description: 'User role', default: Role.Player, enum: Role, example: Role.Admin })
   @IsEnum(Role)
   @IsNotEmpty()
   role?: Role = Role.Player;
 
-  @ApiProperty({ description: 'User score', example: 0, required: false })
+  @Field({ nullable: true })
+  @ApiProperty({
+    description: 'User score',
+    required: false,
+  })
   @IsOptional()
   @IsInt()
   score?: number = 0;
 
+  @Field({ nullable: true })
   @ApiProperty({
     description: 'User status (active/inactive)',
     default: true,
