@@ -13,10 +13,10 @@ import { RedisService } from 'src/common/cache/redis.service';
       useFactory: async (configService: ConfigService) => {
         return {
           store: await redisStore({
-            socket: {
-              host: configService.get('cache.host'),
-              port: configService.get('cache.port'),
-            },
+            url: `redis://${configService.get('cache.host')}:${configService.get('cache.port')}`,
+            password: configService.get('cache.password')
+              ? configService.get('cache.password')
+              : '',
           }),
         };
       },

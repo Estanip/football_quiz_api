@@ -17,6 +17,7 @@ export type Environment = {
   DB_NAME: string;
   DB_SYNCHRONIZE: string;
   CACHE_HOST: string;
+  CACHE_PASSWORD: string;
   CACHE_PORT: string;
   CSRF_SECRET: string;
   CSRF_COOKIE_TOKEN_NAME: string;
@@ -39,6 +40,7 @@ interface EnvVariables {
   };
   cache: {
     host: string;
+    password: string;
     port: number;
   };
   csrf: { cookie_token_name: string; secret: string };
@@ -65,6 +67,7 @@ export default (): EnvVariables => ({
   },
   cache: {
     host: env.CACHE_HOST,
+    password: env.CACHE_PASSWORD ? env.CACHE_PASSWORD : '',
     port: parseInt(env.CACHE_PORT, 10),
   },
   csrf: {
