@@ -47,3 +47,5 @@ secrets/postgres_password.txt
 
 # Husky
 .husky/*
+
+src/database/seeds/data/**
