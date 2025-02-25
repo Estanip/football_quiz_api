@@ -1,6 +1,7 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
+import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { Role } from 'src/constants/role';
-import { BaseController } from 'src/modules/shared/controllers/base-controller';
+import { BaseController } from 'src/modules/shared/controllers/base.controller';
 import { Roles } from 'src/modules/shared/decorators/roles.decorator';
 import { SuccessResponseDto } from 'src/modules/shared/dto/success-response.dto';
 import { ResponseService } from 'src/modules/shared/services/success-response.service';
@@ -24,6 +25,8 @@ export class UserAnswerController extends BaseController<
 
   @Post()
   @HttpCode(201)
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Roles(Role.Admin)
   async create(@Body() data: CreateUserAnswerDto): Promise<SuccessResponseDto<UserAnswerEntity>> {
     const createdEntity = await this._userAnswerService.createAnswer(data);
