@@ -28,7 +28,7 @@ describe('Level (E2E)', () => {
   const userUser: CreateUserDto = {
     email: 'test@user.com',
     password: 'Test1234',
-    role: Role.User,
+    role: Role.Player,
   };
 
   beforeAll(async () => {

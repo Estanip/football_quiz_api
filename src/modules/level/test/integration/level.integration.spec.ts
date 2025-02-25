@@ -18,7 +18,7 @@ import { runSeed } from 'src/database/seeds';
 import { LevelEntity } from 'src/modules/level/entities/level.entity';
 import { LevelController } from 'src/modules/level/level.controller';
 import { LevelService } from 'src/modules/level/level.service';
-import { BaseRepository } from 'src/modules/shared/repository/base-repository';
+import { BaseRepository } from 'src/modules/shared/repository/base.repository';
 import { ResponseService } from 'src/modules/shared/services/success-response.service';
 import { Repository } from 'typeorm';
 loadEnvironment();
