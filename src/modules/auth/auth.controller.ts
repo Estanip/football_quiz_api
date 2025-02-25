@@ -7,6 +7,7 @@ import {
   Post,
   Req,
   Res,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
@@ -30,11 +31,11 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @HttpCode(200)
   @Post('login')
-  @Throttle({ default: { limit: 5, ttl: 30000 } })
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   async login(@Req() req, @Res({ passthrough: true }) res: Response) {
     const { access_token } = await this._authService.signIn(req.user);
 
-    res.cookie('access_token', access_token, _setCookiesOptions(true, 60));
+    res.cookie('access_token', access_token, _setCookiesOptions());
 
     return this._responseService.success(true, HttpStatus.OK, 'User Logged', {
       access_token,
@@ -44,18 +45,35 @@ export class AuthController {
   @IsPublic()
   @HttpCode(201)
   @Post('register')
-  @Throttle({ default: { limit: 5, ttl: 30000 } })
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   async register(@Body() signUpDto: SignUpDto) {
     await this._authService.signUp(signUpDto.email, signUpDto.password, signUpDto.role);
     return this._responseService.success(true, HttpStatus.CREATED, 'User Created', null);
   }
 
-  @Get('csrf-token')
-  getCsrfToken(@Req() req: Request, @Res() res: Response) {
-    const csrfToken = generateCsrfoken(req, res, false, true);
+  @IsPublic()
+  @HttpCode(200)
+  @Post('logout')
+  async logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('access_token', _setCookiesOptions(0));
 
-    res.cookie(process.env.CSRF_COOKIE_TOKEN_NAME, csrfToken, _setCookiesOptions(true, 60));
+    return this._responseService.success(true, HttpStatus.OK, 'User Logged Out', null);
+  }
+
+  @Get('csrf-token')
+  @Throttle({ default: { limit: 30, ttl: 60000 } })
+  getCsrfToken(@Req() req: Request, @Res() res: Response) {
+    const csrfToken = generateCsrfoken(req, res, false);
 
     res.json({ csrf_token: csrfToken });
+  }
+
+  @Get('check-token')
+  @Throttle({ default: { limit: 30, ttl: 60000 } })
+  async getProfile(@Req() req: Request) {
+    const token = req.cookies['access_token'];
+    if (!token) throw new UnauthorizedException('Not authenticated');
+
+    return { isAuthenticated: true };
   }
 }
