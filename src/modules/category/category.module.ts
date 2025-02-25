@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { CategoryEntity } from 'src/modules/category/entities/category.entity';
-import { BaseRepository } from 'src/modules/shared/repository/base-repository';
+import { BaseRepository } from 'src/modules/shared/repository/base.repository';
 import { Repository } from 'typeorm';
 
 import { CategoryController } from './category.controller';
