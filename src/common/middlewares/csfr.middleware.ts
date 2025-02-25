@@ -1,19 +1,19 @@
 import { Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
-import { csrfIgnoredMethods, noCSFRRoutes } from 'src/common/constants/csrf.constants';
-import {
-  doubleCsrfProtection,
-  invalidCsrfTokenError,
-  validateCsrfRequest,
-} from 'src/configuration/csrf.config';
+import { noCSFRRoutes } from 'src/common/constants/csrf.constants';
+import { validateCsrfRequest } from 'src/configuration/csrf.config';
 
 @Injectable()
 export class CsrfMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
-    if (noCSFRRoutes.includes(req.url) || csrfIgnoredMethods.includes(req.method)) return next();
-    else if (validateCsrfRequest(req)) return next();
-    else if (invalidCsrfTokenError) throw new UnauthorizedException('Invalid CSRF token');
+    if (['PATCH', 'POST', 'DELETE'].includes(req.method)) {
+      if (noCSFRRoutes.includes(req.url) || req.path === '/graphql') return next();
 
-    return doubleCsrfProtection(req, res, next);
+      const isValid = validateCsrfRequest(req);
+
+      if (!isValid) throw new UnauthorizedException('Invalid CSRF token');
+    }
+
+    return next();
   }
 }
