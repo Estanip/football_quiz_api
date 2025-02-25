@@ -53,11 +53,12 @@ export class DatabaseService implements TypeOrmOptionsFactory {
       username: env.DB_USERNAME,
       password: env.DB_PASSWORD,
       database: env.DB_NAME,
-      synchronize: env.NODE_ENV === 'production' ? false : true,
+      synchronize: false,
       entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-      migrations: [__dirname + './migrations/*{.ts,.js}'],
+      migrations: [__dirname + '/migrations/*{.ts,.js}'],
       migrationsTableName: 'migrations_history',
-      migrationsRun: true,
+      migrationsRun: false,
+      //logging: ['error', 'warn', 'info', 'log', 'schema', 'migration'],
     };
   }
 
