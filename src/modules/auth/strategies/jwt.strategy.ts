@@ -8,7 +8,7 @@ export class JwtCookieStrategy extends PassportStrategy(Strategy, 'jwt-cookie') 
   constructor() {
     super({
       jwtFromRequest: (req: Request) => {
-        if (req && req.cookies) return req.cookies['access_token'];
+        if (req && req?.cookies) return req.cookies['access_token'];
         return null;
       },
       ignoreExpiration: false,
