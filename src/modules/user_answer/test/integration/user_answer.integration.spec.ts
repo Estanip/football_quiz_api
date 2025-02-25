@@ -16,7 +16,7 @@ import { RedisService } from 'src/common/cache/redis.service';
 import { loadEnvironment } from 'src/configuration/environment/env.config';
 import { runSeed } from 'src/database/seeds';
 import { QuestionService } from 'src/modules/question/question.service';
-import { BaseRepository } from 'src/modules/shared/repository/base-repository';
+import { BaseRepository } from 'src/modules/shared/repository/base.repository';
 import { ResponseService } from 'src/modules/shared/services/success-response.service';
 import { UserAnswerEntity } from 'src/modules/user_answer/entities/user_answer.entity';
 import { UserAnswerController } from 'src/modules/user_answer/user_answer.controller';

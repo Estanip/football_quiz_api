@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { unitTestConfig } from 'src/__test__/config/unit.test-config';
 import { Level } from 'src/constants/level';
 import { QuestionService } from 'src/modules/question/question.service';
-import { BaseRepository } from 'src/modules/shared/repository/base-repository';
+import { BaseRepository } from 'src/modules/shared/repository/base.repository';
 import { UserAnswerEntity } from 'src/modules/user_answer/entities/user_answer.entity';
 import { UserAnswerService } from 'src/modules/user_answer/user_answer.service';
 
@@ -46,7 +46,9 @@ describe('UserAnswerService', () => {
         answeredAt: new Date('2025-01-01'),
       };
       const userAnswerEntity = {
-        ...createUserAnswerDto,
+        user: 1,
+        answer: 1,
+        question: 1,
         id: 1,
         isActive: true,
       };
@@ -63,15 +65,19 @@ describe('UserAnswerService', () => {
       };
 
       questionService.findById.mockResolvedValue(questionEntity as any);
-      let result = await userAnswerService.createAnswer(createUserAnswerDto);
+      let result = await userAnswerService.createAnswer(createUserAnswerDto as any);
       result = { ...result, isCorrect: true };
 
-      expect(result).toEqual({ ...userAnswerEntity, isCorrect: true });
-      expect(userAnswerRepository.create).toHaveBeenCalledWith({
-        ...createUserAnswerDto,
-        isCorrect: true,
+      expect(result).toEqual({
+        ...userAnswerEntity,
+        answeredAt: new Date('2025-01-01'),
       });
-      expect(userAnswerRepository.create).toHaveBeenCalledTimes(1);
+      expect(userAnswerRepository.createEntity).toHaveBeenCalledWith({
+        user: { id: 1 },
+        answer: { id: 1 },
+        question: { id: 1 },
+      });
+      expect(userAnswerRepository.createEntity).toHaveBeenCalledTimes(1);
       expect(questionService.findById).toHaveBeenCalledWith(createUserAnswerDto.question);
     });
 
@@ -81,7 +87,7 @@ describe('UserAnswerService', () => {
         question: 1,
       };
       const error = new Error('Required fields empty');
-      userAnswerRepository.create.mockRejectedValue(error);
+      userAnswerRepository.createEntity.mockRejectedValue(error);
 
       await expect(userAnswerService.createAnswer(createUserAnswerDto as any)).rejects.toThrow(
         error,
@@ -102,11 +108,11 @@ describe('UserAnswerService', () => {
           answeredAt: new Date('2025-01-01'),
         },
       ]);
-      expect(userAnswerRepository.find).toHaveBeenCalled();
+      expect(userAnswerRepository.findEntities).toHaveBeenCalled();
     });
 
     it('should return an empty list if no userAnswers are found', async () => {
-      userAnswerRepository.find.mockResolvedValue([]);
+      userAnswerRepository.findEntities.mockResolvedValue([]);
 
       const userAnswers = await userAnswerService.findAll();
 

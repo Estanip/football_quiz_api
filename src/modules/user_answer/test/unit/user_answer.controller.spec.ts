@@ -49,7 +49,7 @@ describe('UserAnswerController', () => {
           answeredAt: new Date('2025-01-01'),
           isCorrect: true,
         },
-      ];
+      ] as any[];
       userAnswerService.findAll.mockResolvedValue(userAnswers);
       const result = await userAnswerController.get();
 
