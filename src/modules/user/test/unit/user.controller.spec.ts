@@ -5,6 +5,7 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 import { unitTestConfig } from 'src/__test__/config/unit.test-config';
 import { Role } from 'src/constants/role';
 import { ResponseService } from 'src/modules/shared/services/success-response.service';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
 import { UserController } from 'src/modules/user/user.controller';
 import { UserService } from 'src/modules/user/user.service';
 
@@ -45,7 +46,9 @@ describe('UserController', () => {
 
   describe('get', () => {
     it('should return a list of users', async () => {
-      const users = [{ id: 1, email: 'test@test.com', role: Role.Admin, score: 0 }];
+      const users = [{ id: 1, email: 'test@test.com', role: Role.Admin, score: 0 }] as Partial<
+        UserEntity[]
+      >;
       userService.findAll.mockResolvedValue(users);
       const result = await userController.get();
 
