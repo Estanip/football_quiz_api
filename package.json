@@ -104,7 +104,7 @@
   "lint-staged": {
     "**/*.ts": [
       "npm run format",
-      "eslint --max-warnings 0 ."
+      "npm run lint"
     ]
   }
 }
