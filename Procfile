@@ -1,1 +1,1 @@
-web: ls -l && yarn run build && ls -l dist && yarn run start:prod
+web: ls -l && npm run build && ls -l dist && npm run start:prod
