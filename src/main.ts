@@ -1,7 +1,6 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
-import * as express from 'express';
 import * as morgan from 'morgan';
 import { HttpExceptionFilter } from 'src/common/exceptions/http.exception';
 import { ErrorInterceptor } from 'src/common/interceptors/error.interceptor';
@@ -20,7 +19,6 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }),
   );
-  app.use(express.json());
   app.use(cookieParser());
   app.use(new CsrfMiddleware().use);
   app.use(morgan('dev'));
