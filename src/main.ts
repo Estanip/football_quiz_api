@@ -1,7 +1,7 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import * as cookieParser from 'cookie-parser';
-import * as morgan from 'morgan';
+import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
 import { HttpExceptionFilter } from 'src/common/exceptions/http.exception';
 import { ErrorInterceptor } from 'src/common/interceptors/error.interceptor';
 import { CsrfMiddleware } from 'src/common/middlewares/csfr.middleware';

@@ -10,16 +10,15 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
-    "moduleResolution": "node",
     "incremental": true,
+    "esModuleInterop": true,
     "skipLibCheck": true,
     "isolatedModules": true,
     "strictNullChecks": false,
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
-    "rootDir": "./"
+    "noFallthroughCasesInSwitch": false
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"],
