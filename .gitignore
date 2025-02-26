@@ -50,3 +50,4 @@ secrets/postgres_password.txt
 
 # DB
 src/database/seeds/data/**
+.vercel
