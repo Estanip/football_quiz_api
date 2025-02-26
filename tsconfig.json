@@ -9,13 +9,8 @@
     "target": "ES2021",
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": "src",
     "baseUrl": "./",
     "moduleResolution": "node",
-    /*     "paths": {
-      "src/*": ["src/*"],
-      "@root/*": ["./"]
-    }, */
     "incremental": true,
     "skipLibCheck": true,
     "isolatedModules": true,
