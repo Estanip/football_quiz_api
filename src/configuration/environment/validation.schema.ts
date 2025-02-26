@@ -13,7 +13,6 @@ export const validationSchema = Joi.object({
   CACHE_PORT: Joi.number().required().default(6379),
   IS_PUBLIC_KEY: Joi.string().required(),
   JWT_SECRET: Joi.string().required(),
-  NO_CSRF_KEY: Joi.string().required(),
   PORT: Joi.number().required().default(3000),
   ROLES_KEY: Joi.string().required(),
 });

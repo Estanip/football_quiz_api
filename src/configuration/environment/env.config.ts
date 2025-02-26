@@ -22,10 +22,8 @@ export type Environment = {
   CACHE_PORT: string;
   CACHE_TLS: string;
   CSRF_SECRET: string;
-  CSRF_COOKIE_TOKEN_NAME: string;
   IS_PUBLIC_KEY: string;
   JWT_SECRET: string;
-  NO_CSRF_KEY: string;
   PORT: string;
   ROLES_KEY: string;
 };
@@ -47,12 +45,12 @@ interface EnvVariables {
     port: number;
     tls: boolean;
   };
-  csrf: { cookie_token_name: string; secret: string };
+  csrf: { secret: string };
   env: string;
   jwt: {
     secret: string;
   };
-  keys: { is_public: string; no_csrf: string; roles: string };
+  keys: { is_public: string; roles: string };
   port: number;
 }
 
@@ -76,7 +74,6 @@ export default (): EnvVariables => ({
     tls: env.CACHE_TLS === 'true' && Boolean(env.CACHE_TLS),
   },
   csrf: {
-    cookie_token_name: env.CSRF_COOKIE_TOKEN_NAME,
     secret: env.CSRF_SECRET,
   },
   env: env.NODE_ENV,
@@ -85,7 +82,6 @@ export default (): EnvVariables => ({
   },
   keys: {
     is_public: env.IS_PUBLIC_KEY,
-    no_csrf: env.NO_CSRF_KEY,
     roles: env.ROLES_KEY,
   },
   port: parseInt(env.PORT, 10) || 3000,
