@@ -1,5 +1,5 @@
 import { Controller } from '@nestjs/common';
-import { BaseController } from 'src/modules/shared/controllers/base-controller';
+import { BaseController } from 'src/modules/shared/controllers/base.controller';
 import { ResponseService } from 'src/modules/shared/services/success-response.service';
 import { SubcategoryEntity } from 'src/modules/subcategory/entities/subcategory.entity';
 

@@ -15,14 +15,14 @@ export type Environment = {
   DB_USERNAME: string;
   DB_PASSWORD: string;
   DB_NAME: string;
-  DB_SYNCHRONIZE: string;
+  DB_SSL: string;
   CACHE_HOST: string;
+  CACHE_PASSWORD: string;
   CACHE_PORT: string;
+  CACHE_TLS: string;
   CSRF_SECRET: string;
-  CSRF_COOKIE_TOKEN_NAME: string;
   IS_PUBLIC_KEY: string;
   JWT_SECRET: string;
-  NO_CSRF_KEY: string;
   PORT: string;
   ROLES_KEY: string;
 };
@@ -35,19 +35,20 @@ interface EnvVariables {
     username: string;
     password: string;
     name: string;
-    synchronize: boolean;
+    ssl: boolean;
   };
   cache: {
     host: string;
+    password: string;
     port: number;
+    tls: boolean;
   };
-  csrf: { cookie_token_name: string; secret: string };
-
+  csrf: { secret: string };
   env: string;
   jwt: {
     secret: string;
   };
-  keys: { is_public: string; no_csrf: string; roles: string };
+  keys: { is_public: string; roles: string };
   port: number;
 }
 
@@ -61,14 +62,15 @@ export default (): EnvVariables => ({
     username: env.DB_USERNAME,
     password: env.DB_PASSWORD,
     name: env.DB_NAME,
-    synchronize: env.DB_SYNCHRONIZE === 'true',
+    ssl: env.DB_SSL === 'true' && Boolean(env.DB_SSL),
   },
   cache: {
     host: env.CACHE_HOST,
+    password: env.CACHE_PASSWORD ? env.CACHE_PASSWORD : '',
     port: parseInt(env.CACHE_PORT, 10),
+    tls: env.CACHE_TLS === 'true' && Boolean(env.CACHE_TLS),
   },
   csrf: {
-    cookie_token_name: env.CSRF_COOKIE_TOKEN_NAME,
     secret: env.CSRF_SECRET,
   },
   env: env.NODE_ENV,
@@ -77,7 +79,6 @@ export default (): EnvVariables => ({
   },
   keys: {
     is_public: env.IS_PUBLIC_KEY,
-    no_csrf: env.NO_CSRF_KEY,
     roles: env.ROLES_KEY,
   },
   port: parseInt(env.PORT, 10) || 3000,

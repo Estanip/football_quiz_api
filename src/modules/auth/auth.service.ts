@@ -20,13 +20,13 @@ export class AuthService {
     };
   }
 
-  async signUp(email: string, password: string, role: Role) {
+  async signUp(email: string, password: string, role: Role = Role.Player) {
     const user = await this._userService.findOneByEmail(email);
     if (user) throw new BadRequestException('User exists');
 
     password = await _hashPassword(password);
 
-    return await this._userService.create({ email, password, role });
+    return await this._userService.create({ email, password, role, username: email });
   }
 
   async validateUser(email: string, password: string) {

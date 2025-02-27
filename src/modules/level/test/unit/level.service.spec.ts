@@ -3,7 +3,7 @@ import { unitTestConfig } from 'src/__test__/config/unit.test-config';
 import { Level } from 'src/constants/level';
 import { LevelEntity } from 'src/modules/level/entities/level.entity';
 import { LevelService } from 'src/modules/level/level.service';
-import { BaseRepository } from 'src/modules/shared/repository/base-repository';
+import { BaseRepository } from 'src/modules/shared/repository/base.repository';
 
 describe('LevelService', () => {
   let levelService: LevelService;
@@ -36,14 +36,14 @@ describe('LevelService', () => {
       const result = await levelService.create(createLevelDto);
 
       expect(result).toEqual(levelEntity);
-      expect(levelRepository.create).toHaveBeenCalledWith(createLevelDto);
-      expect(levelRepository.create).toHaveBeenCalledTimes(1);
+      expect(levelRepository.createEntity).toHaveBeenCalledWith(createLevelDto);
+      expect(levelRepository.createEntity).toHaveBeenCalledTimes(1);
     });
 
     it('should throw an error if creation fails', async () => {
       const createLevelDto = { name: 'MOCK' } as any;
       const error = new Error('Invalid level name');
-      levelRepository.create.mockRejectedValue(error);
+      levelRepository.createEntity.mockRejectedValue(error);
 
       await expect(levelService.create(createLevelDto)).rejects.toThrow(error);
     });
@@ -54,11 +54,11 @@ describe('LevelService', () => {
       const levels = await levelService.findAll();
 
       expect(levels).toEqual([{ name: Level.EASY }]);
-      expect(levelRepository.find).toHaveBeenCalled();
+      expect(levelRepository.findEntities).toHaveBeenCalled();
     });
 
     it('should return an empty list if no levels are found', async () => {
-      levelRepository.find.mockResolvedValue([]);
+      levelRepository.findEntities.mockResolvedValue([]);
 
       const levels = await levelService.findAll();
 

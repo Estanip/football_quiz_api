@@ -12,7 +12,13 @@ module.exports = {
     node: true,
     jest: true,
   },
-  ignorePatterns: ['.eslintrc.js', 'jest.**.js', 'ormconfig.ts', 'commitlint.config.js'],
+  ignorePatterns: [
+    '.eslintrc.js',
+    'jest.**.js',
+    'ormconfig.ts',
+    'commitlint.config.js',
+    './src/database/seeds/data',
+  ],
   rules: {
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',

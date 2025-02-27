@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { CategoryService } from 'src/modules/category/category.service';
 import { CategoryEntity } from 'src/modules/category/entities/category.entity';
-import { BaseController } from 'src/modules/shared/controllers/base-controller';
+import { BaseController } from 'src/modules/shared/controllers/base.controller';
 import { ResponseService } from 'src/modules/shared/services/success-response.service';
 
 import { CreateCategoryDto } from './dto/create-category.dto';

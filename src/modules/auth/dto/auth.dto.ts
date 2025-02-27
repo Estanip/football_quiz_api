@@ -13,8 +13,8 @@ export class SignInDto {
 }
 
 export class SignUpDto extends SignInDto {
-  @ApiProperty()
+  @ApiProperty({ default: Role.Player })
   @IsString()
   @IsEnum(Role)
-  role: Role;
+  role: Role = Role.Player;
 }

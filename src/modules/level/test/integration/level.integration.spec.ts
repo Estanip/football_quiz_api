@@ -1,5 +1,7 @@
 import { CacheModule } from '@nestjs/cache-manager';
+import { APP_GUARD } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { redisTestConfig } from 'src/__test__/config/cache.test-config';
 import { dbTestConfig } from 'src/__test__/config/db.test-config';
@@ -16,7 +18,7 @@ import { runSeed } from 'src/database/seeds';
 import { LevelEntity } from 'src/modules/level/entities/level.entity';
 import { LevelController } from 'src/modules/level/level.controller';
 import { LevelService } from 'src/modules/level/level.service';
-import { BaseRepository } from 'src/modules/shared/repository/base-repository';
+import { BaseRepository } from 'src/modules/shared/repository/base.repository';
 import { ResponseService } from 'src/modules/shared/services/success-response.service';
 import { Repository } from 'typeorm';
 loadEnvironment();
@@ -46,8 +48,15 @@ describe('Level (Integration)', () => {
           useFactory: (repo: Repository<LevelEntity>) => new BaseRepository<LevelEntity>(repo),
           inject: [getRepositoryToken(LevelEntity)],
         },
+        {
+          provide: APP_GUARD,
+          useValue: { canActivate: jest.fn().mockReturnValue(true) },
+        },
       ],
-    }).compile();
+    })
+      .overrideGuard(ThrottlerGuard)
+      .useValue({ canActivate: jest.fn().mockReturnValue(true) })
+      .compile();
 
     await initializeDatabaseConnection();
     await runSeed();

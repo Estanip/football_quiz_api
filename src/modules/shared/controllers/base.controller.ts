@@ -5,7 +5,7 @@ import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { Role } from 'src/constants/role';
 import { Roles } from 'src/modules/shared/decorators/roles.decorator';
 import { SuccessResponseDto } from 'src/modules/shared/dto/success-response.dto';
-import { BaseService } from 'src/modules/shared/services/base-service';
+import { BaseService } from 'src/modules/shared/services/base.service';
 import { ResponseService } from 'src/modules/shared/services/success-response.service';
 import { _validateDto } from 'src/modules/shared/validations/dto.validation';
 import { DeepPartial } from 'typeorm';
@@ -23,7 +23,7 @@ export class BaseController<T, CreateDto, GetDto> {
   @HttpCode(200)
   @CacheTTL(60000)
   @UseGuards(ThrottlerGuard)
-  @Throttle({ default: { limit: 60, ttl: 60000 } })
+  @Throttle({ default: { limit: 50, ttl: 60000 } })
   @UseInterceptors(CacheInterceptor)
   async get(): Promise<SuccessResponseDto<GetDto[]>> {
     const data = await this.baseService.findAll();
@@ -36,6 +36,8 @@ export class BaseController<T, CreateDto, GetDto> {
 
   @Post()
   @HttpCode(201)
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Roles(Role.Admin)
   async create(@Body() data: CreateDto): Promise<SuccessResponseDto<T>> {
     // Manual validation

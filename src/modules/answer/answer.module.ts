@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { AnswerEntity } from 'src/modules/answer/entities/answer.entity';
-import { BaseRepository } from 'src/modules/shared/repository/base-repository';
+import { BaseRepository } from 'src/modules/shared/repository/base.repository';
 import { Repository } from 'typeorm';
 
 import { AnswerController } from './answer.controller';

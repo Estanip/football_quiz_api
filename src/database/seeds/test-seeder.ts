@@ -1,3 +1,5 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import { _hashPassword } from 'src/common/utils/bcrypt';
 import { Level } from 'src/constants/level';
 import { Role } from 'src/constants/role';
@@ -33,6 +35,7 @@ export class TestSeeder {
 
       await queryRunner.commitTransaction();
     } catch (error) {
+      console.log('error', error);
       await queryRunner.rollbackTransaction();
       console.error('Seeding failed');
     } finally {
@@ -47,7 +50,8 @@ export class TestSeeder {
       {
         email: 'test@user.com',
         password: await _hashPassword('Test1234'),
-        role: Role.User,
+        role: Role.Player,
+        username: 'test@user.com',
       },
     ];
     await userRepository.save(users);
@@ -80,58 +84,44 @@ export class TestSeeder {
       name: 'Mundiales',
     });
     await subcategoryRepository.save([subcategory1, subcategory2]);
+    // Read Questions JSON
+    const filePath = path.join(__dirname, '/data/questions_test.json');
+    const fileData = fs.readFileSync(filePath, 'utf-8');
+    const questions = JSON.parse(fileData);
 
-    // Create Answers
-    const answer1 = answerRepository.create({
-      text: 'Racing Club',
-      categories: [category1],
-      subcategories: [subcategory1],
-    });
-    const answer2 = answerRepository.create({
-      text: 'Independiente',
-      categories: [category1],
-      subcategories: [subcategory1],
-    });
-    const answer3 = answerRepository.create({
-      text: 'Boca Juniors',
-      categories: [category1],
-      subcategories: [subcategory1],
-    });
-    const answer4 = answerRepository.create({
-      text: 'Brasil',
-      categories: [category1],
-      subcategories: [subcategory2],
-    });
-    const answer5 = answerRepository.create({
-      text: 'Argentina',
-      categories: [category1],
-      subcategories: [subcategory2],
-    });
-    const answer6 = answerRepository.create({
-      text: 'Alemania',
-      categories: [category1],
-      subcategories: [subcategory2],
-    });
-    await answerRepository.save([answer1, answer2, answer3, answer4, answer5, answer6]);
+    for (const questionData of questions) {
+      const subcategory = await subcategoryRepository.findOne({
+        where: { name: questionData.subcategory },
+      });
 
-    // Create Questions
-    const question1 = questionRepository.create({
-      text: 'Cual es el club más grande de Argentina',
-      answerOptions: [answer1, answer2, answer3],
-      correctAnswer: answer3,
-      category: category1,
-      subcategory: subcategory1,
-      level: Level.EASY,
-    });
-    const question2 = questionRepository.create({
-      text: 'Que país ganó más mundiales',
-      answerOptions: [answer4, answer5, answer6],
-      correctAnswer: answer4,
-      category: category1,
-      subcategory: subcategory2,
-      level: Level.EASY,
-    });
-    await questionRepository.save([question1, question2]);
+      const answers = [];
+      let correctAnswer = null;
+
+      for (const answerData of questionData.answers) {
+        const answer = answerRepository.create({
+          text: answerData.text,
+          categories: [category1],
+          subcategories: [subcategory],
+        });
+
+        await answerRepository.save(answer);
+        answers.push(answer);
+
+        if (answerData.isCorrect) correctAnswer = answer;
+      }
+
+      // Create question
+      const question = questionRepository.create({
+        text: questionData.text,
+        answerOptions: answers,
+        correctAnswer: correctAnswer,
+        category: category1,
+        subcategory: subcategory,
+        level: questionData.level,
+      });
+
+      await questionRepository.save(question);
+    }
   }
 
   private async _seedUserAnswersAndScore(queryRunner) {
@@ -142,7 +132,7 @@ export class TestSeeder {
 
     const users = await userRepository.find();
     const questions = await questionRepository.find({
-      relations: ['answerOptions', 'category', 'subcategory'],
+      relations: ['answerOptions', 'category', 'subcategory', 'correctAnswer'],
     });
 
     for (const user of users) {
@@ -154,7 +144,7 @@ export class TestSeeder {
           user: user,
           question: question,
           answer: answer,
-          isCorrect: answer.id === question.correctAnswer.id,
+          isCorrect: answer.id ? answer.id === question.correctAnswer.id : false,
         });
 
         await userAnswerRepository.save(userAnswer);

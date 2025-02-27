@@ -1,6 +1,9 @@
+import { APP_GUARD } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import { unitTestConfig } from 'src/__test__/config/unit.test-config';
 import { Level } from 'src/constants/level';
+import { LevelEntity } from 'src/modules/level/entities/level.entity';
 import { LevelController } from 'src/modules/level/level.controller';
 import { LevelService } from 'src/modules/level/level.service';
 import { ResponseService } from 'src/modules/shared/services/success-response.service';
@@ -18,9 +21,16 @@ describe('LevelController', () => {
           provide: LevelService,
           useValue: unitTestConfig.levelServiceMock.useValue,
         },
+        {
+          provide: APP_GUARD,
+          useValue: { canActivate: jest.fn().mockReturnValue(true) },
+        },
         ResponseService,
       ],
-    }).compile();
+    })
+      .overrideGuard(ThrottlerGuard)
+      .useValue({ canActivate: jest.fn().mockReturnValue(true) })
+      .compile();
 
     levelController = module.get<LevelController>(LevelController);
     levelService = module.get<jest.Mocked<LevelService>>(LevelService);
@@ -32,7 +42,7 @@ describe('LevelController', () => {
 
   describe('get', () => {
     it('should return a list of levels', async () => {
-      const levels = [{ name: Level.EASY }];
+      const levels = [{ name: Level.EASY }] as LevelEntity[];
       levelService.findAll.mockResolvedValue(levels);
       const result = await levelController.get();
 

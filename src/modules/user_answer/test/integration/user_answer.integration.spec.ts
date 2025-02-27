@@ -1,5 +1,7 @@
 import { CacheModule } from '@nestjs/cache-manager';
+import { APP_GUARD } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { redisTestConfig } from 'src/__test__/config/cache.test-config';
 import { dbTestConfig } from 'src/__test__/config/db.test-config';
@@ -14,7 +16,7 @@ import { RedisService } from 'src/common/cache/redis.service';
 import { loadEnvironment } from 'src/configuration/environment/env.config';
 import { runSeed } from 'src/database/seeds';
 import { QuestionService } from 'src/modules/question/question.service';
-import { BaseRepository } from 'src/modules/shared/repository/base-repository';
+import { BaseRepository } from 'src/modules/shared/repository/base.repository';
 import { ResponseService } from 'src/modules/shared/services/success-response.service';
 import { UserAnswerEntity } from 'src/modules/user_answer/entities/user_answer.entity';
 import { UserAnswerController } from 'src/modules/user_answer/user_answer.controller';
@@ -51,8 +53,15 @@ describe('UserAnswer (Integration)', () => {
             new BaseRepository<UserAnswerEntity>(repo),
           inject: [getRepositoryToken(UserAnswerEntity)],
         },
+        {
+          provide: APP_GUARD,
+          useValue: { canActivate: jest.fn().mockReturnValue(true) },
+        },
       ],
-    }).compile();
+    })
+      .overrideGuard(ThrottlerGuard)
+      .useValue({ canActivate: jest.fn().mockReturnValue(true) })
+      .compile();
 
     await initializeDatabaseConnection();
     await runSeed();

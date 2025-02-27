@@ -147,10 +147,10 @@ function _setBaseServiceValue(entity, result) {
 
 function _setBaseRepositoryValue(entity, result) {
   return {
-    create: jest.fn().mockResolvedValue(entity),
-    find: jest.fn().mockResolvedValue([result]),
-    findOne: jest.fn().mockResolvedValue(result),
-    update: jest.fn().mockResolvedValue(result),
+    createEntity: jest.fn().mockResolvedValue(entity),
+    findEntities: jest.fn().mockResolvedValue([result]),
+    findEntityByProperty: jest.fn().mockResolvedValue(result),
+    updateEntity: jest.fn().mockResolvedValue(result),
     delete: jest.fn().mockResolvedValue(undefined),
   };
 }

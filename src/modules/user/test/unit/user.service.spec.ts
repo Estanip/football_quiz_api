@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { unitTestConfig } from 'src/__test__/config/unit.test-config';
 import { Role } from 'src/constants/role';
-import { BaseRepository } from 'src/modules/shared/repository/base-repository';
+import { BaseRepository } from 'src/modules/shared/repository/base.repository';
 import { UserEntity } from 'src/modules/user/entities/user.entity';
 import { UserService } from 'src/modules/user/user.service';
 
@@ -42,7 +42,7 @@ describe('UserService', () => {
       const result = await userService.create(createUserDto);
 
       expect(result).toEqual(userEntity);
-      expect(userRepository.create).toHaveBeenCalledWith(createUserDto);
+      expect(userRepository.createEntity).toHaveBeenCalledWith(createUserDto);
     });
   });
 
@@ -51,7 +51,7 @@ describe('UserService', () => {
       const users = await userService.findAll();
 
       expect(users).toEqual([{ id: 1, email: 'test@test.com', role: Role.Admin }]);
-      expect(userRepository.find).toHaveBeenCalled();
+      expect(userRepository.findEntities).toHaveBeenCalled();
     });
   });
 });

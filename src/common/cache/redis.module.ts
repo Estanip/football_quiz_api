@@ -11,13 +11,20 @@ import { RedisService } from 'src/common/cache/redis.service';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
+        const storeConf = {
+          socket: {
+            host: configService.get('cache.host'),
+            port: configService.get('cache.port'),
+          },
+        };
+
+        if (configService.get('cache.password') !== '')
+          storeConf['password'] = configService.get('cache.password');
+        if (configService.get('cache.tls'))
+          storeConf.socket['tls'] = configService.get('cache.tls');
+
         return {
-          store: await redisStore({
-            socket: {
-              host: configService.get('cache.host'),
-              port: configService.get('cache.port'),
-            },
-          }),
+          store: await redisStore(storeConf),
         };
       },
     }),

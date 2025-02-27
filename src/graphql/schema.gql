@@ -1,0 +1,90 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""answer"""
+type AnswerEntity {
+  categories: [CategoryEntity!]!
+  id: Int!
+  isActive: Boolean!
+  question: [QuestionEntity!]!
+  subcategories: [SubcategoryEntity!]!
+  text: String!
+}
+
+"""category"""
+type CategoryEntity {
+  answers: [AnswerEntity!]!
+  id: Int!
+  isActive: Boolean!
+  name: String!
+  questions: [QuestionEntity!]!
+  subcategories: [SubcategoryEntity!]!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+"""Difficulty levels for questions"""
+enum Level {
+  EASY
+  HARD
+  MEDIUM
+}
+
+type Query {
+  getQuestionsBySubcategoryAndLevel(level: Level!, subcategory: Float!): [QuestionEntity!]!
+  getUserById: UserEntity!
+  sayHello: String!
+}
+
+type QuestionEntity {
+  answerOptions: [AnswerEntity!]!
+  category: CategoryEntity!
+  correctAnswer: AnswerEntity
+  id: Int!
+  isActive: Boolean!
+  level: String!
+  subcategory: SubcategoryEntity!
+  text: String!
+}
+
+"""User accesss roles"""
+enum Role {
+  Admin
+  Player
+}
+
+"""Score History"""
+type ScoreHistoryEntity {
+  change: Int!
+  changedAt: DateTime!
+  id: Int!
+  reason: String
+  user: UserEntity!
+}
+
+"""subcategory"""
+type SubcategoryEntity {
+  answers: [AnswerEntity!]!
+  categories: [CategoryEntity!]!
+  id: Int!
+  isActive: Boolean!
+  name: String!
+  questions: [QuestionEntity!]!
+}
+
+"""users"""
+type UserEntity {
+  email: String!
+  fav_team: String
+  id: Int!
+  isActive: Boolean!
+  password: String!
+  role: Role!
+  score: Int!
+  scoreHistory: [ScoreHistoryEntity!]!
+  username: String!
+}

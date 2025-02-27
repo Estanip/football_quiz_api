@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
-import { BaseRepository } from 'src/modules/shared/repository/base-repository';
+import { BaseRepository } from 'src/modules/shared/repository/base.repository';
 import { UserEntity } from 'src/modules/user/entities/user.entity';
 import { UserController } from 'src/modules/user/user.controller';
+import { UserResolver } from 'src/modules/user/user.resolver';
 import { UserService } from 'src/modules/user/user.service';
 import { Repository } from 'typeorm';
 
@@ -11,6 +12,7 @@ import { Repository } from 'typeorm';
   controllers: [UserController],
   providers: [
     UserService,
+    UserResolver,
     {
       provide: BaseRepository,
       useFactory: (repo: Repository<UserEntity>) => new BaseRepository<UserEntity>(repo),

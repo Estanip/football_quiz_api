@@ -8,7 +8,7 @@ import { JwtCookieAuthGuard } from 'src/modules/auth/guards/auth.guard';
 import { RolesGuard } from 'src/modules/auth/guards/roles.guard';
 import { JwtCookieStrategy } from 'src/modules/auth/strategies/jwt.strategy';
 import { LocalStrategy } from 'src/modules/auth/strategies/local.strategy';
-import { BaseRepository } from 'src/modules/shared/repository/base-repository';
+import { BaseRepository } from 'src/modules/shared/repository/base.repository';
 import { UserEntity } from 'src/modules/user/entities/user.entity';
 import { UserService } from 'src/modules/user/user.service';
 import { Repository } from 'typeorm';

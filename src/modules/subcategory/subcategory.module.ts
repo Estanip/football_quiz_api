@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
-import { BaseRepository } from 'src/modules/shared/repository/base-repository';
+import { BaseRepository } from 'src/modules/shared/repository/base.repository';
 import { SubcategoryEntity } from 'src/modules/subcategory/entities/subcategory.entity';
 import { Repository } from 'typeorm';
 
