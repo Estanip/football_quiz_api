@@ -40,6 +40,8 @@ lerna-debug.log*
 # Docker
 docker-compose.override.yml
 *.docker
+Dockerfile
+docker-compose.yml
 
 # Secrets
 secrets
@@ -50,4 +52,6 @@ secrets/postgres_password.txt
 
 # DB
 src/database/seeds/data/**
+
+# Vercel
 .vercel
