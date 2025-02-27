@@ -40,8 +40,6 @@ lerna-debug.log*
 # Docker
 docker-compose.override.yml
 *.docker
-Dockerfile
-docker-compose.yml
 
 # Secrets
 secrets
