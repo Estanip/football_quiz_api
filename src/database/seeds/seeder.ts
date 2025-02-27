@@ -36,7 +36,7 @@ export class Seeder {
       await queryRunner.commitTransaction();
     } catch (error) {
       await queryRunner.rollbackTransaction();
-      console.error('Seeding failed');
+      console.error('Seeding failed', error);
     } finally {
       await queryRunner.release();
     }
