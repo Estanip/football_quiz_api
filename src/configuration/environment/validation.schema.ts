@@ -8,7 +8,6 @@ export const validationSchema = Joi.object({
   DB_USERNAME: Joi.string().required(),
   DB_PASSWORD: Joi.string().required(),
   DB_NAME: Joi.string().required(),
-  DB_SYNCHRONIZE: Joi.boolean().default(false),
   CACHE_HOST: Joi.string().required(),
   CACHE_PORT: Joi.number().required().default(6379),
   IS_PUBLIC_KEY: Joi.string().required(),

@@ -16,7 +16,6 @@ export type Environment = {
   DB_PASSWORD: string;
   DB_NAME: string;
   DB_SSL: string;
-  DB_SYNCHRONIZE: string;
   CACHE_HOST: string;
   CACHE_PASSWORD: string;
   CACHE_PORT: string;
@@ -37,7 +36,6 @@ interface EnvVariables {
     password: string;
     name: string;
     ssl: boolean;
-    synchronize: boolean;
   };
   cache: {
     host: string;
@@ -65,7 +63,6 @@ export default (): EnvVariables => ({
     password: env.DB_PASSWORD,
     name: env.DB_NAME,
     ssl: env.DB_SSL === 'true' && Boolean(env.DB_SSL),
-    synchronize: Boolean(env.DB_SYNCHRONIZE),
   },
   cache: {
     host: env.CACHE_HOST,
