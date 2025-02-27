@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import { HttpExceptionFilter } from 'src/common/exceptions/http.exception';
 import { ErrorInterceptor } from 'src/common/interceptors/error.interceptor';
 import { CsrfMiddleware } from 'src/common/middlewares/csfr.middleware';
+import { configureHelmet } from 'src/configuration/helmet.config';
 import { configureSwagger } from 'src/configuration/swagger.config';
 
 import { AppModule } from './app.module';
@@ -21,6 +22,7 @@ async function bootstrap() {
   );
   app.use(cookieParser());
   app.use(new CsrfMiddleware().use);
+  app.use(configureHelmet());
   app.use(morgan('dev'));
 
   app.enableCors({
